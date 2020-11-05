@@ -1,0 +1,18 @@
+### MANAGED BY PUPPET ###
+  set daemon 120            # check services at 2-minute intervals
+  set log /var/log/monit.log
+
+  set idfile /var/lib/monit/id
+  set statefile /var/lib/monit/state
+
+
+  set eventqueue
+      basedir /var/lib/monit/events # set the base directory where events will be stored
+      slots 100                     # optionally limit the queue size
+set httpd port 2812
+use address "<%= @ip %>"  #replace 12.34.56.78 with your server's IP
+allow 0.0.0.0/0.0.0.0
+allow admin:"<%= @admin_pass %>"
+
+   include /etc/monit/conf.d/*
+   include /etc/monit/conf-enabled/*

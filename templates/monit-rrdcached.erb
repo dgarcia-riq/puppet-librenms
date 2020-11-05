@@ -1,0 +1,7 @@
+### MANAGED BY PUPPET ###
+check process rrdcached with pidfile /run/rrdcached.pid
+group librenms
+start program = "/bin/bash -c '/etc/init.d/rrdcached restart'"
+stop program = "/bin/bash -c '/etc/init.d/rrdcached stop'"
+if failed host 127.0.0.1 port 42217 then restart
+if 5 restarts within 5 cycles then timeout
