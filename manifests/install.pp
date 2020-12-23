@@ -5,7 +5,6 @@
 #
 class librenms::install
 (
-  String  $version,
   String  $user,
   String  $clone_source,
   String  $basedir,
@@ -26,7 +25,6 @@ class librenms::install
 
   vcsrepo { 'librenms-repo-clone':
     ensure   => present,
-    revision => $version,
     path     => $basedir,
     provider => 'git',
     source   => $::librenms::clone_source,
