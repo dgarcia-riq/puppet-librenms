@@ -13,7 +13,7 @@ class librenms::monit
   file { 'librenms-etc-monit-monitrc':
     ensure  => 'present',
     name    => '/etc/monit/monitrc',
-    content => template('librenms/monitrc.erb'),
+    content => template('monitrc.erb'),
     owner   => $::os::params::adminuser,
     group   => $::os::params::admingroup,
     mode    => '0600',
@@ -24,7 +24,7 @@ class librenms::monit
   file { 'librenms-etc-monit-rrdcached':
     ensure  => 'present',
     name    => '/etc/monit/conf.d/rrdcached',
-    content => template('librenms/monit-rrdcached.erb'),
+    content => template('monit-rrdcached.erb'),
     owner   => $::os::params::adminuser,
     group   => $::os::params::admingroup,
     mode    => '0644',
@@ -35,7 +35,7 @@ class librenms::monit
   file { 'librenms-etc-monit-memcached':
     ensure  => 'present',
     name    => '/etc/monit/conf.d/memcached',
-    content => template('librenms/monit-memcached.erb'),
+    content => template('monit-memcached.erb'),
     owner   => $::os::params::adminuser,
     group   => $::os::params::admingroup,
     mode    => '0644',

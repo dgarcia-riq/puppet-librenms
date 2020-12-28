@@ -18,7 +18,7 @@ class librenms::rrdcached
     file { 'librenms-etc-default-rrdcached':
       ensure  => 'present',
       name    => '/etc/default/rrdcached',
-      content => template('librenms/rrdcached.erb'),
+      content => template('rrdcached.erb'),
       owner   => $::os::params::adminuser,
       group   => $::os::params::admingroup,
       mode    => '0755',

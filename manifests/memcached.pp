@@ -13,7 +13,7 @@ class librenms::memcached
   file { 'librenms-etc-memcached':
     ensure  => 'present',
     name    => '/etc/memcached.conf',
-    content => template('librenms/memcached.erb'),
+    content => template('memcached.erb'),
     mode    => '0644',
     require => Package['memcached'],
     notify  => Service['librenms-memcached'],
