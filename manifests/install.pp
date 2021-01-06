@@ -27,7 +27,7 @@ class librenms::install
     ensure   => present,
     path     => $basedir,
     provider => 'git',
-    source   => $::librenms::clone_source,
+    source   => $clone_source,
     # Without this the rrd unit file would create /opt/librenms/rrd
     # directory and make this resource fail
     before   => Class['::librenms::rrdcached'],
