@@ -52,15 +52,15 @@ class librenms::config
       require => $build_base_php_require,
     }
 
-    exec { 'librenms-build-base.php':
-      command => "php ${basedir}/build-base.php && touch ${basedir}/.build-base.php-ran",
-      creates => "${basedir}/.build-base.php-ran",
-      require =>
-      [
-        $build_base_php_require,
-        Exec['librenms-composer_wrapper.php'],
-      ]
-    }
+#    exec { 'librenms-build-base.php':
+#      command => "php ${basedir}/build-base.php && touch ${basedir}/.build-base.php-ran",
+#      creates => "${basedir}/.build-base.php-ran",
+#      require =>
+#      [
+#        $build_base_php_require,
+#        Exec['librenms-composer_wrapper.php'],
+#      ]
+#    }
 
     exec { 'librenms-adduser.php':
       command => "php ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
