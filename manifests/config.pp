@@ -65,7 +65,7 @@ class librenms::config
     exec { 'librenms-adduser.php':
       command => "php ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
       creates => "${basedir}/.adduser.php-ran",
-      require => Exec['librenms-build-base.php'],
+      require => Exec['librenms-composer_wrapper.php'],
     }
 
     file { '/etc/cron.d/librenms':
