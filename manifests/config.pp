@@ -65,7 +65,7 @@ class librenms::config
     exec { 'librenms-adduser.php':
       command => "php ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
       creates => "${basedir}/.adduser.php-ran",
-      require => Exec['librenms-composer_wrapper.php'],
+      require => $build_base_php_require,
     }
 
     file { '/etc/cron.d/librenms':
@@ -118,7 +118,7 @@ echo \"librenms backup cleanup completed: `date`\" > /var/log/mysql/librenms-bac
       command => "pip3 install -r ${basedir}/requirements.txt && touch /.pip3_PyMySQL_root_require_done",
       path    => ['/usr/bin/'],
       creates => "/.pip3_PyMySQL_root_require_done",
-      require => Exec['librenms-build-base.php'],
+      require => $build_base_php_require,
     }
 
     exec { 'pip3_PyMySQL_librenms_require':
@@ -126,14 +126,14 @@ echo \"librenms backup cleanup completed: `date`\" > /var/log/mysql/librenms-bac
       path    => ['/usr/bin/'],
       user    => 'librenms',
       creates => "${basedir}/.pip3_PyMySQL_librenms_require_done",
-      require => Exec['librenms-build-base.php'],
+      require => $build_base_php_require,
     }
 
     exec { 'php_timezone_cli_require':
       command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.2/cli/php.ini \
       && touch /.php_timezone_cli_require_done",
       creates => "/.php_timezone_cli_require_done",
-      require => Exec['librenms-build-base.php'],
+      require => $build_base_php_require,
     }
 
     exec { 'php_timezone_apache2_require':
@@ -148,7 +148,7 @@ echo \"librenms backup cleanup completed: `date`\" > /var/log/mysql/librenms-bac
       command => "echo 'ALTER DATABASE librenms CHARACTER SET utf8 COLLATE utf8_unicode_ci;' | \
       mysql -p${db_pass} -u ${db_user} librenms && touch /.mysql_utf8_require_done",
       creates => "/.mysql_utf8_require_done",
-      require => Exec['librenms-build-base.php'],
+      require => $build_base_php_require,
     }
 
     exec { 'dir_perm_require':
