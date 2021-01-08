@@ -89,8 +89,8 @@ class librenms::config
 ## mysql backup and maintenance
     cron { 'librenms_mysqlbackup':
       command => "/usr/bin/mysqldump -p${db_pass} -u ${db_user} librenms >> \
-/data/backup/librenms-`date +\"%m%d%Y\"`.sql 2> /dev/null && echo \"librenms backup completed: `date`\" > \
-/var/log/mysql/librenms-backup.log",
+        /data/backup/librenms-`date +\"%m%d%Y\"`.sql 2> /dev/null && echo \"librenms backup completed: `date`\" > \
+        /var/log/mysql/librenms-backup.log",
       user    => 'root',
       hour    => '2',
       minute  => '30',
@@ -98,7 +98,7 @@ class librenms::config
 
     cron { 'librenms_mysqlbackup_cleanup':
       command  => "find /data/backup/ -name *.sql -mtime +30 -exec rm -f {} \; 2> /dev/null && \
-echo \"librenms backup cleanup completed: `date`\" > /var/log/mysql/librenms-backup_cleanup.log",
+        echo \"librenms backup cleanup completed: `date`\" > /var/log/mysql/librenms-backup_cleanup.log",
       user     => 'root',
       hour     => '2',
       minute  => '35',
@@ -138,7 +138,7 @@ echo \"librenms backup cleanup completed: `date`\" > /var/log/mysql/librenms-bac
 
     exec { 'php_timezone_apache2_require':
       command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.2/apache2/php.ini \
-      && touch /.php_timezone_apache2_require_done",
+        && touch /.php_timezone_apache2_require_done",
       creates => "/.php_timezone_apache2_require_done",
       notify  => Class['Apache::Service'],
       require => Class['Apache'],
@@ -146,16 +146,16 @@ echo \"librenms backup cleanup completed: `date`\" > /var/log/mysql/librenms-bac
 
     exec { 'mysql_utf8_require':
       command => "echo 'ALTER DATABASE librenms CHARACTER SET utf8 COLLATE utf8_unicode_ci;' | \
-      mysql -p${db_pass} -u ${db_user} librenms && touch /.mysql_utf8_require_done",
+        mysql -p${db_pass} -u ${db_user} librenms && touch /.mysql_utf8_require_done",
       creates => "/.mysql_utf8_require_done",
       require => $build_base_php_require,
     }
 
     exec { 'dir_perm_require':
       command => "chown -R librenms:librenms ${basedir} && \
-      setfacl -d -m g::rwx ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ && \
-      chmod -R ug=rwX ${basedir}/rrd ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ \
-      && touch /.dir_perm_require_done",
+        setfacl -d -m g::rwx ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ && \
+        chmod -R ug=rwX ${basedir}/rrd ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ \
+        && touch /.dir_perm_require_done",
       creates => "/.dir_perm_require_done",
       require => Class['librenms::install'],
     }
