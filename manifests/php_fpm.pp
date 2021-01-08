@@ -1,5 +1,5 @@
 #
-# == Class: librenms::php-fpm
+# == Class: librenms::php_fpm
 #
 # Configure php-fpm specifically for LibreNMS.
 #
@@ -7,8 +7,6 @@ class librenms::php_fpm
 (
 
 ) inherits librenms::params {
-
-  ensure_resource('package', 'memcached', { 'ensure' => 'present' })
 
   file { 'librenms-etc-php-fpm':
     ensure  => 'present',
