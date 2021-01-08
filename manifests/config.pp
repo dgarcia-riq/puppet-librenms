@@ -52,16 +52,6 @@ class librenms::config
       require => $build_base_php_require,
     }
 
-#    exec { 'librenms-build-base.php':
-#      command => "php ${basedir}/build-base.php && touch ${basedir}/.build-base.php-ran",
-#      creates => "${basedir}/.build-base.php-ran",
-#      require =>
-#      [
-#        $build_base_php_require,
-#        Exec['librenms-composer_wrapper.php'],
-#      ]
-#    }
-
     exec { 'librenms-adduser.php':
       command => "php ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
       creates => "${basedir}/.adduser.php-ran",
@@ -71,7 +61,6 @@ class librenms::config
     file { '/etc/cron.d/librenms':
       ensure  => 'present',
       content => template('librenms/cron.erb'),
-#      source  => 'file:///opt/librenms/librenms.nonroot.cron',
       mode    => '0644',
       owner   => 'root',
       group   => 'root',
@@ -88,20 +77,22 @@ class librenms::config
 
 ## mysql backup and maintenance
     cron { 'librenms_mysqlbackup':
-      command => "/usr/bin/mysqldump -p${db_pass} -u ${db_user} librenms >> \
-        /data/backup/librenms-`date +\"%m%d%Y\"`.sql 2> /dev/null && echo \"librenms backup completed: `date`\" > \
-        /var/log/mysql/librenms-backup.log",
+      command => "
+                  /usr/bin/mysqldump -p${db_pass} -u ${db_user} librenms >> \
+                  /data/backup/librenms-`date +\"%m%d%Y\"`.sql 2> /dev/null && echo \"librenms backup completed: `date`\" > \
+                  /var/log/mysql/librenms-backup.log",
       user    => 'root',
       hour    => '2',
       minute  => '30',
     }
 
     cron { 'librenms_mysqlbackup_cleanup':
-      command  => "find /data/backup/ -name *.sql -mtime +30 -exec rm -f {} \; 2> /dev/null && \
-        echo \"librenms backup cleanup completed: `date`\" > /var/log/mysql/librenms-backup_cleanup.log",
+      command  => "
+                  find /data/backup/ -name *.sql -mtime +30 -exec rm -f {} \; 2> /dev/null && \
+                  echo \"librenms backup cleanup completed: `date`\" > /var/log/mysql/librenms-backup_cleanup.log",
       user     => 'root',
       hour     => '2',
-      minute  => '35',
+      minute   => '35',
       monthday => '1',
     }
 
@@ -109,7 +100,7 @@ class librenms::config
       path    => "${basedir}/.env",
       line    => "DB_HOST=${db_host}",
       match   => "DB_HOST=",
-      ensure => present,
+      ensure  => present,
     }
 ##
 
@@ -131,14 +122,14 @@ class librenms::config
 
     exec { 'php_timezone_cli_require':
       command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.2/cli/php.ini \
-      && touch /.php_timezone_cli_require_done",
+                  && touch /.php_timezone_cli_require_done",
       creates => "/.php_timezone_cli_require_done",
       require => $build_base_php_require,
     }
 
     exec { 'php_timezone_apache2_require':
       command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.2/apache2/php.ini \
-        && touch /.php_timezone_apache2_require_done",
+                  && touch /.php_timezone_apache2_require_done",
       creates => "/.php_timezone_apache2_require_done",
       notify  => Class['Apache::Service'],
       require => Class['Apache'],
@@ -146,33 +137,33 @@ class librenms::config
 
     exec { 'mysql_utf8_require':
       command => "echo 'ALTER DATABASE librenms CHARACTER SET utf8 COLLATE utf8_unicode_ci;' | \
-        mysql -p${db_pass} -u ${db_user} librenms && touch /.mysql_utf8_require_done",
+                  mysql -p${db_pass} -u ${db_user} librenms && touch /.mysql_utf8_require_done",
       creates => "/.mysql_utf8_require_done",
       require => $build_base_php_require,
     }
 
     exec { 'dir_perm_require':
       command => "chown -R librenms:librenms ${basedir} && \
-        setfacl -d -m g::rwx ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ && \
-        chmod -R ug=rwX ${basedir}/rrd ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ \
-        && touch /.dir_perm_require_done",
+                  setfacl -d -m g::rwx ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ && \
+                  chmod -R ug=rwX ${basedir}/rrd ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ \
+                  && touch /.dir_perm_require_done",
       creates => "/.dir_perm_require_done",
       require => Class['librenms::install'],
     }
 
     exec { 'github_remove_require':
       command => "git config --global user.email librenms@${server_name} ; git config --global user.name librenms ; \
-      git reset -q  ; \
-      git checkout . ; \
-      git clean -d -f app bootstrap contrib database doc html includes LibreNMS licenses \
-      mibs misc resources routes scripts sql-schema tests ; \
-      git checkout .gitignore bootstrap/cache/.gitignore logs/.gitignore rrd/.gitignore \
-      storage/app/.gitignore storage/app/public/.gitignore \
-      storage/debugbar/.gitignore storage/framework/cache/.gitignore \
-      storage/framework/cache/data/.gitignore storage/framework/sessions/.gitignore \
-      storage/framework/testing/.gitignore storage/framework/views/.gitignore storage/logs/.gitignore \
-      && touch ${basedir}/.github_remove_require_done ;\
-      chown librenms:librenms .git/index",
+                  git reset -q  ; \
+                  git checkout . ; \
+                  git clean -d -f app bootstrap contrib database doc html includes LibreNMS licenses \
+                  mibs misc resources routes scripts sql-schema tests ; \
+                  git checkout .gitignore bootstrap/cache/.gitignore logs/.gitignore rrd/.gitignore \
+                  storage/app/.gitignore storage/app/public/.gitignore \
+                  storage/debugbar/.gitignore storage/framework/cache/.gitignore \
+                  storage/framework/cache/data/.gitignore storage/framework/sessions/.gitignore \
+                  storage/framework/testing/.gitignore storage/framework/views/.gitignore storage/logs/.gitignore \
+                  && touch ${basedir}/.github_remove_require_done ;\
+                  chown librenms:librenms .git/index",
       cwd     => $basedir,
       user    => 'librenms',
       creates => "${basedir}/.github_remove_require_done",
