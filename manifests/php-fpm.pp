@@ -3,7 +3,7 @@
 #
 # Configure php-fpm specifically for LibreNMS.
 #
-class librenms::php-fpm
+class librenms::php_fpm
 (
 
 ) inherits librenms::params {
