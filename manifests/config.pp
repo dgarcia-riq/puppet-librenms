@@ -173,21 +173,21 @@ class librenms::config
 
     exec { 'lnms_shortcut_require':
       command => "ln -s /opt/librenms/lnms /usr/local/bin/lnms && touch /.lnms_shortcut_require_require_done",
-      path    => ['/usr/bin/'],
+      path    => ['/bin/'],
       creates => "/.lnms_shortcut_require_require_done",
       require => $build_base_php_require,
     }
 
     exec { 'bash_completion_require':
       command => "cp /opt/librenms/misc/lnms-completion.bash /etc/bash_completion.d/ && touch /.bash_completion_require_done",
-      path    => ['/usr/bin/'],
+      path    => ['/bin/'],
       creates => "/.bash_completion_require_done",
       require => $build_base_php_require,
     }
 
     exec { 'log_rotation_require':
       command => "cp /opt/librenms/misc/librenms.logrotate /etc/logrotate.d/librenms && touch /.log_rotation_require_done",
-      path    => ['/usr/bin/'],
+      path    => ['/bin/'],
       creates => "/.log_rotation_require_done",
       require => $build_base_php_require,
     }
