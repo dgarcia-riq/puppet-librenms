@@ -21,6 +21,7 @@ class librenms::config
   String  $distributed_poller_memcached_host,
   String  $distributed_poller_group,
   Optional[String] $extra_config_file = undef,
+  String  $community,
 
 ) inherits librenms::params {
     File {
@@ -29,7 +30,7 @@ class librenms::config
     }
 
     # Construct the poller module hash, with defaults coming from params.pp
-    $l_poller_modules = merge($riskiq::profiles::librenms::params::default_poller_modules, $poller_modules)
+    $l_poller_modules = merge($::librenms::params::default_poller_modules, $poller_modules)
 
     file { 'librenms-config.php':
       path    => "${basedir}/config.php",
