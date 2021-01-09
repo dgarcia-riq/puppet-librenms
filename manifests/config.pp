@@ -122,14 +122,14 @@ class librenms::config
     }
 
     exec { 'php_timezone_cli_require':
-      command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.2/cli/php.ini \
+      command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.4/cli/php.ini \
                   && touch /.php_timezone_cli_require_done",
       creates => "/.php_timezone_cli_require_done",
       require => $build_base_php_require,
     }
 
     exec { 'php_timezone_apache2_require':
-      command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.2/apache2/php.ini \
+      command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.4/apache2/php.ini \
                   && touch /.php_timezone_apache2_require_done",
       creates => "/.php_timezone_apache2_require_done",
       notify  => Class['Apache::Service'],
