@@ -1,4 +1,5 @@
 <?php
+### MANAGED BY PUPPET ###
 
 ## Have a look in defaults.inc.php for examples of settings you can set here. DO NOT EDIT defaults.inc.php!
 
@@ -28,15 +29,14 @@ $config['install_dir']  = "<%= @basedir %>";
 
 ### Enable this to use rrdcached. Be sure rrd_dir is within the rrdcached dir
 ### and that your web server has permission to talk to rrdcached.
-<%= @rrdcached_line %>
+$config['rrdcached'] = "<%= @rrdcached %>";
 $config['rrdtool_version'] = "<%= @rrdtool_version %>";
 
 ### Default community
-$config['snmp']['community'] = array("public");
+$config['snmp']['community'] = array("<%= @community %>");
 
 ### Authentication Model
 $config['auth_mechanism'] = "mysql"; # default, other options: ldap, http-auth
-#$config['http_auth_guest'] = "guest"; # remember to configure this user if you use http-auth
 
 ### List of RFC1918 networks to allow scanning-based discovery
 $config['nets'][] = "10.0.0.0/8";
@@ -53,6 +53,12 @@ $config['update'] = 1;
 <% @l_poller_modules.each do |key, value| -%>
 $config['poller_modules']['<%= key %>'] = <%= value %>;
 <% end %>
+
+# Distributed Poller-Settings
+$config['distributed_poller']                            = true;
+$config['distributed_poller_group']                      = '<%= @distributed_poller_group %>';
+$config['distributed_poller_memcached_host']             = '<%= @distributed_poller_memcached_host %>';
+$config['distributed_poller_memcached_port']             = '11211';
 
 # Extra PHP configuration file
 <% if @extra_config_file -%>
