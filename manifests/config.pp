@@ -1,5 +1,5 @@
 #
-# == Class: riskiq::profiles::librenms::config
+# == Class: librenms::config
 #
 # Configure a virtual host for LibreNMS
 #
