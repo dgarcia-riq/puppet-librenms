@@ -136,6 +136,13 @@ class librenms::config
       require => Class['Apache'],
     }
 
+    exec { 'php_timezone_fpm_require':
+      command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.4/fpm/php.ini \
+                  && touch /.php_timezone_fpm_require_done",
+      creates => "/.php_timezone_fpm_require_done",
+      require => $build_base_php_require,
+    }
+
     exec { 'mysql_utf8_require':
       command => "echo 'ALTER DATABASE librenms CHARACTER SET utf8 COLLATE utf8_unicode_ci;' | \
                   mysql -p${db_pass} -u ${db_user} librenms && touch /.mysql_utf8_require_done",
