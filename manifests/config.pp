@@ -140,6 +140,7 @@ class librenms::config
       command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.4/fpm/php.ini \
                   && touch /.php_timezone_fpm_require_done",
       creates => "/.php_timezone_fpm_require_done",
+      notify  => Class['Php_fpm::Service'],
       require => $build_base_php_require,
     }
 
