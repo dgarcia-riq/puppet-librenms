@@ -52,7 +52,7 @@ class librenms::install
   }
 
   # Set ACLs for the files that need to be editable for all
-  $acl_dirs = ["${basedir}/rrd", "${basedir}/logs", "${basedir}/bootstrap/cache", "${basedir}/storage"].each |$dir| {
+  $acl_dirs = ["${basedir}/logs", "${basedir}/bootstrap/cache", "${basedir}/storage"].each |$dir| {
     posix_acl { $dir:
       action     => set,
       provider   => posixacl,
