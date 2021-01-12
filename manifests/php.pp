@@ -1,11 +1,11 @@
 #
 # == Class: librenms::php
 #
-# Configure php-fpm specifically for LibreNMS.
+# Configure php specifically for LibreNMS.
 #
 class librenms::php
 (
-
+  String  $php_timezone,
 ) inherits librenms::params {
 
   package {[ 'composer', 'php7.4', 'php7.4-mysql', 'php7.4-gd',

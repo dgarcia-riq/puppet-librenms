@@ -1,10 +1,7 @@
 #
-# @summary setup apache2 reverse proxy for LibreNMS
+# == Class: librenms::apache
 #
-# @param servername
-#   Virtualhost servername
-# @param ssl
-#   Use SSL. Only supports default snakeoil certificates right now.
+# Configure apache specifically for LibreNMS.
 #
 class librenms::apache
 (
