@@ -20,8 +20,8 @@ class librenms::config
   String  $rrdtool_version,
   String  $distributed_poller_memcached_host,
   String  $distributed_poller_group,
-  Optional[String] $extra_config_file = undef,
   String  $community,
+  Optional[String] $extra_config_file = undef,
 
 ) inherits librenms::params {
     File {
@@ -98,10 +98,10 @@ class librenms::config
     }
 
     file_line { 'mysql_env':
-      path    => "${basedir}/.env",
-      line    => "DB_HOST=${db_host}",
-      match   => "DB_HOST=",
-      ensure  => present,
+      ensure => present,
+      path   => "${basedir}/.env",
+      line   => "DB_HOST=${db_host}",
+      match  => 'DB_HOST=',
     }
 ##
 
@@ -109,7 +109,7 @@ class librenms::config
     exec { 'pip3_PyMySQL_root_require':
       command => "pip3 install -r ${basedir}/requirements.txt && touch /.pip3_PyMySQL_root_require_done",
       path    => ['/usr/bin/'],
-      creates => "/.pip3_PyMySQL_root_require_done",
+      creates => '/.pip3_PyMySQL_root_require_done',
       require => $build_base_php_require,
     }
 
@@ -124,14 +124,14 @@ class librenms::config
     exec { 'php_timezone_cli_require':
       command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.4/cli/php.ini \
                   && touch /.php_timezone_cli_require_done",
-      creates => "/.php_timezone_cli_require_done",
+      creates => '/.php_timezone_cli_require_done',
       require => $build_base_php_require,
     }
 
     exec { 'php_timezone_apache2_require':
       command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.4/apache2/php.ini \
                   && touch /.php_timezone_apache2_require_done",
-      creates => "/.php_timezone_apache2_require_done",
+      creates => '/.php_timezone_apache2_require_done',
       notify  => Class['Apache::Service'],
       require => Class['Apache'],
     }
@@ -139,7 +139,7 @@ class librenms::config
     exec { 'php_timezone_fpm_require':
       command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.4/fpm/php.ini \
                   && touch /.php_timezone_fpm_require_done",
-      creates => "/.php_timezone_fpm_require_done",
+      creates => '/.php_timezone_fpm_require_done',
       notify  => Service['php-fpm'],
       require => $build_base_php_require,
     }
@@ -147,7 +147,7 @@ class librenms::config
     exec { 'mysql_utf8_require':
       command => "echo 'ALTER DATABASE librenms CHARACTER SET utf8 COLLATE utf8_unicode_ci;' | \
                   mysql -p${db_pass} -u ${db_user} librenms && touch /.mysql_utf8_require_done",
-      creates => "/.mysql_utf8_require_done",
+      creates => '/.mysql_utf8_require_done',
       require => $build_base_php_require,
     }
 
@@ -156,7 +156,7 @@ class librenms::config
                   setfacl -d -m g::rwx ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ && \
                   chmod -R ug=rwX ${basedir}/rrd ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ \
                   && touch /.dir_perm_require_done",
-      creates => "/.dir_perm_require_done",
+      creates => '/.dir_perm_require_done',
       require => Class['librenms::install'],
     }
 
@@ -180,23 +180,23 @@ class librenms::config
     }
 
     exec { 'lnms_shortcut_require':
-      command => "ln -s /opt/librenms/lnms /usr/local/bin/lnms && touch /.lnms_shortcut_require_require_done",
+      command => 'ln -s /opt/librenms/lnms /usr/local/bin/lnms && touch /.lnms_shortcut_require_require_done',
       path    => ['/bin/'],
-      creates => "/.lnms_shortcut_require_require_done",
+      creates => '/.lnms_shortcut_require_require_done',
       require => $build_base_php_require,
     }
 
     exec { 'bash_completion_require':
-      command => "cp /opt/librenms/misc/lnms-completion.bash /etc/bash_completion.d/ && touch /.bash_completion_require_done",
+      command => 'cp /opt/librenms/misc/lnms-completion.bash /etc/bash_completion.d/ && touch /.bash_completion_require_done',
       path    => ['/bin/'],
-      creates => "/.bash_completion_require_done",
+      creates => '/.bash_completion_require_done',
       require => $build_base_php_require,
     }
 
     exec { 'log_rotation_require':
-      command => "cp /opt/librenms/misc/librenms.logrotate /etc/logrotate.d/librenms && touch /.log_rotation_require_done",
+      command => 'cp /opt/librenms/misc/librenms.logrotate /etc/logrotate.d/librenms && touch /.log_rotation_require_done',
       path    => ['/bin/'],
-      creates => "/.log_rotation_require_done",
+      creates => '/.log_rotation_require_done',
       require => $build_base_php_require,
     }
 ##
