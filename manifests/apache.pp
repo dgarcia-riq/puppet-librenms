@@ -13,7 +13,6 @@ class librenms::apache
           $key_filepath,
 )
 {
-  if $manage_apache {
     class { '::apache':
       purge_configs => true,
       default_vhost => false,
