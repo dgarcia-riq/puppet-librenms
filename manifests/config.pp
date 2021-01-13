@@ -51,15 +51,15 @@ class librenms::config
     exec { 'librenms-composer_wrapper.php':
       command => "php ${basedir}/scripts/composer_wrapper.php install --no-dev && touch ${basedir}/.composer_wrapper.php-ran",
       creates => "${basedir}/.composer_wrapper.php-ran",
-      require => $build_base_php_require,
+      require => Class['librenms::php'],
     }
 
     exec { 'librenms-adduser.php':
       command => "php ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
       creates => "${basedir}/.adduser.php-ran",
-      require => $build_base_php_require,
+      require => Class['librenms::php'],
     }
-
+ 
     file { '/etc/cron.d/librenms':
       ensure  => 'present',
       content => template('librenms/cron.erb'),
@@ -126,7 +126,7 @@ class librenms::config
       command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.4/cli/php.ini \
                   && touch /.php_timezone_cli_require_done",
       creates => '/.php_timezone_cli_require_done',
-      require => $build_base_php_require,
+      require => Class['librenms::php'],
     }
 
     exec { 'php_timezone_apache2_require':
@@ -134,7 +134,7 @@ class librenms::config
                   && touch /.php_timezone_apache2_require_done",
       creates => '/.php_timezone_apache2_require_done',
       notify  => Class['Apache::Service'],
-      require => Class['Apache'],
+      require => [ Class['Apache'], Class['librenms::php'] ],
     }
 
     exec { 'php_timezone_fpm_require':
@@ -142,7 +142,7 @@ class librenms::config
                   && touch /.php_timezone_fpm_require_done",
       creates => '/.php_timezone_fpm_require_done',
       notify  => Service['php-fpm'],
-      require => $build_base_php_require,
+      require => Class['librenms::php'],
     }
 
     exec { 'mysql_utf8_require':
