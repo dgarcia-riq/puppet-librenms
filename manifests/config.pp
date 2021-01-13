@@ -154,7 +154,7 @@ class librenms::config
     exec { 'dir_perm_require':
       command => "chown -R librenms:librenms ${basedir} && \
                   setfacl -d -m g::rwx ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ && \
-                  chmod -R ug=rwX ${basedir}/rrd ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ \
+                  chmod -R ug=rwX ${basedir}/logs ${basedir}/bootstrap/cache/ ${basedir}/storage/ \
                   && touch /.dir_perm_require_done",
       creates => '/.dir_perm_require_done',
       require => Class['librenms::install'],
