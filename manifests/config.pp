@@ -126,7 +126,7 @@ class librenms::config
       command => "sed -i \"s,;date.timezone\ =,date.timezone\ = \"America/Los_Angeles\",g\" /etc/php/7.4/cli/php.ini \
                   && touch /.php_timezone_cli_require_done",
       creates => '/.php_timezone_cli_require_done',
-      require => Class['librenms::php'],
+      require => Package['php7.4-fpm'],
     }
 
     exec { 'php_timezone_apache2_require':
@@ -134,7 +134,7 @@ class librenms::config
                   && touch /.php_timezone_apache2_require_done",
       creates => '/.php_timezone_apache2_require_done',
       notify  => Class['Apache::Service'],
-      require => [ Class['Apache'], Class['librenms::php'] ],
+      require => [ Class['Apache'], Package['php7.4-fpm'] ],
     }
 
     exec { 'php_timezone_fpm_require':
@@ -142,7 +142,7 @@ class librenms::config
                   && touch /.php_timezone_fpm_require_done",
       creates => '/.php_timezone_fpm_require_done',
       notify  => Service['php-fpm'],
-      require => Class['librenms::php'],
+      require => Package['php7.4-fpm'],
     }
 
     exec { 'mysql_utf8_require':
