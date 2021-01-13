@@ -33,6 +33,7 @@ class librenms::php
     content => template('librenms/php-fpm-librenms.erb'),
     mode    => '0644',
     notify  => Service['php-fpm'],
+    require => Package['php7.4-fpm'],
   }
 
   service { 'php-fpm':
