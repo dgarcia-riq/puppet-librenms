@@ -51,13 +51,13 @@ class librenms::config
     exec { 'librenms-composer_wrapper.php':
       command => "php ${basedir}/scripts/composer_wrapper.php install --no-dev && touch ${basedir}/.composer_wrapper.php-ran",
       creates => "${basedir}/.composer_wrapper.php-ran",
-      require => $build_base_php_require,
+      require => File['/opt/librenms/composer.json'],
     }
 
     exec { 'librenms-adduser.php':
       command => "php ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
       creates => "${basedir}/.adduser.php-ran",
-      require => $build_base_php_require,
+      require => File['/opt/librenms/composer.json'],
     }
  
     file { '/etc/cron.d/librenms':
