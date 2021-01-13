@@ -18,6 +18,7 @@ class librenms::config
   String  $poller_threads,
   String  $rrdcached,
   String  $rrdtool_version,
+  String  $rrd_mount_device,
   String  $distributed_poller_memcached_host,
   String  $distributed_poller_group,
   String  $community,
@@ -158,6 +159,16 @@ class librenms::config
                   && touch /.dir_perm_require_done",
       creates => '/.dir_perm_require_done',
       require => Class['librenms::install'],
+    }
+
+    mount { '/opt/librenms/rrd':
+      ensure  => 'mounted',
+      atboot  => true,
+      device  => $rrd_mount_device,
+      fstype  => 'nfs',
+      options => 'vers=3,defaults,noatime,nofail,acl,intr',
+      pass    => 0,
+      require => Exec['dir_perm_require'],
     }
 
     exec { 'github_remove_require':
