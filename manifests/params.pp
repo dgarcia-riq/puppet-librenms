@@ -23,7 +23,8 @@ class librenms::params {
         'php-net-smtp',
         'python3-dotenv',
         'python3-pip',
-        'python3-pymysql'
+        'python3-pymysql',
+        'nfs-common'
       ]
       $dependency_pip3_packages = [ 'redis' ]
     }
