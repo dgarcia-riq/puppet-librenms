@@ -51,13 +51,13 @@ class librenms::config
     exec { 'librenms-composer_wrapper.php':
       command => "php ${basedir}/scripts/composer_wrapper.php install --no-dev && touch ${basedir}/.composer_wrapper.php-ran",
       creates => "${basedir}/.composer_wrapper.php-ran",
-      require => Class['librenms::php'],
+      require => $build_base_php_require,
     }
 
     exec { 'librenms-adduser.php':
       command => "php ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
       creates => "${basedir}/.adduser.php-ran",
-      require => Class['librenms::php'],
+      require => $build_base_php_require,
     }
  
     file { '/etc/cron.d/librenms':
@@ -86,6 +86,7 @@ class librenms::config
       user    => 'root',
       hour    => '2',
       minute  => '30',
+      require => $build_base_php_require,
     }
 
     cron { 'librenms_mysqlbackup_cleanup':
@@ -96,6 +97,7 @@ class librenms::config
       hour     => '2',
       minute   => '35',
       monthday => '1',
+      require => $build_base_php_require,
     }
 
     file_line { 'mysql_env':
@@ -103,6 +105,7 @@ class librenms::config
       path   => "${basedir}/.env",
       line   => "DB_HOST=${db_host}",
       match  => 'DB_HOST=',
+      require => $build_base_php_require,
     }
 ##
 
