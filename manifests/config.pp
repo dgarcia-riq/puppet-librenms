@@ -86,28 +86,7 @@ class librenms::config
       require => Class['librenms::install'],
     }
 
-## mysql backup and maintenance
-    cron { 'librenms_mysqlbackup':
-      command => "
-                  /usr/bin/mysqldump -p${db_pass} -u ${db_user} librenms >> \
-                  /data/backup/librenms-`date +\"%m%d%Y\"`.sql 2> /dev/null && echo \"librenms backup completed: `date`\" > \
-                  /var/log/mysql/librenms-backup.log",
-      user    => 'root',
-      hour    => '2',
-      minute  => '30',
-      require => $build_base_php_require,
-    }
-
-    cron { 'librenms_mysqlbackup_cleanup':
-      command  => "
-                  find /data/backup/ -name *.sql -mtime +30 -exec rm -f {} \; 2> /dev/null && \
-                  echo \"librenms backup cleanup completed: `date`\" > /var/log/mysql/librenms-backup_cleanup.log",
-      user     => 'root',
-      hour     => '2',
-      minute   => '35',
-      monthday => '1',
-      require => $build_base_php_require,
-    }
+## mysql env
 
     file_line { 'mysql_env':
       ensure => present,
