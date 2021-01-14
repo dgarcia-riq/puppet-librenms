@@ -48,14 +48,23 @@ class librenms::config
 
     $build_base_php_require = File['librenms-config.php']
 
+    exec { 'set_default_php_require':
+      command => "update-alternatives --set php /usr/bin/php7.4 && touch ${basedir}/.set_default_php_require",
+      path    => ['/usr/bin/'],
+      creates => "${basedir}/.set_default_php_require",
+      require => Class['librenms::install'],
+    }
+
     exec { 'librenms-composer_wrapper.php':
-      command => "php7.4 ${basedir}/scripts/composer_wrapper.php install --no-dev && touch ${basedir}/.composer_wrapper.php-ran",
+      command => "php ${basedir}/scripts/composer_wrapper.php install --no-dev && touch ${basedir}/.composer_wrapper.php-ran",
+      path    => ['/usr/bin/'],
       creates => "${basedir}/.composer_wrapper.php-ran",
       require => Class['librenms::install'],
     }
 
     exec { 'librenms-adduser.php':
-      command => "php7.4 ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
+      command => "php ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
+      path    => ['/usr/bin/'],
       creates => "${basedir}/.adduser.php-ran",
       require => Class['librenms::install'],
     }
