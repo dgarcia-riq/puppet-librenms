@@ -8,20 +8,6 @@ class librenms::php
   String  $php_timezone,
 ) inherits librenms::params {
 
-  exec { 'apt-get update':
-    command => '/usr/bin/apt-get update',
-    onlyif  => '/bin/sh -c "[ ! -f /var/cache/apt/pkgcache.bin ] || /usr/bin/find /etc/apt/* -cnewer /var/cache/apt/pkgcache.bin | \
-      /bin/grep . > /dev/null"',
-  }
-
-  package { 'software-properties-common':
-    require  => Exec['apt-get update'],
-  }
-
-  apt::ppa { 'ppa:ondrej/php':
-    require  => Exec['apt-get update'],
-  }
-
   package {[ 'composer', 'php7.4', 'php7.4-mysql', 'php7.4-gd',
     'php7.4-cli', 'php-pear', 'php7.4-curl', 'php7.4-fpm',
     'php7.4-snmp', 'php-net-ipv6', 'php7.4-zip',
