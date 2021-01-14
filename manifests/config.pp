@@ -41,6 +41,14 @@ class librenms::config
       require => Class['librenms::install'],
     }
 
+    file { 'librenms-config.php':
+      path    => "${basedir}/config.php",
+      owner   => $system_user,
+      group   => $system_user,
+      content => template('librenms/config.php.erb'),
+      require => Class['librenms::install'],
+    }
+
     Exec {
       user => $::os::params::adminuser,
       path => [ '/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin' ],
@@ -51,13 +59,13 @@ class librenms::config
     exec { 'librenms-composer_wrapper.php':
       command => "php ${basedir}/scripts/composer_wrapper.php install --no-dev && touch ${basedir}/.composer_wrapper.php-ran",
       creates => "${basedir}/.composer_wrapper.php-ran",
-      require => File['/opt/librenms/composer.json'],
+      require => Class['librenms::install'],
     }
 
     exec { 'librenms-adduser.php':
       command => "php ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
       creates => "${basedir}/.adduser.php-ran",
-      require => File['/opt/librenms/composer.json'],
+      require => Class['librenms::install'],
     }
  
     file { '/etc/cron.d/librenms':
