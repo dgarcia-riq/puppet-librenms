@@ -59,14 +59,14 @@ class librenms::config
       command => "php ${basedir}/scripts/composer_wrapper.php install --no-dev && touch ${basedir}/.composer_wrapper.php-ran",
       path    => ['/usr/bin/'],
       creates => "${basedir}/.composer_wrapper.php-ran",
-      require => Class['librenms::install'],
+      require => [ Class['librenms::install'], Exec['set_default_php_require'] ],
     }
 
     exec { 'librenms-adduser.php':
       command => "php ${basedir}/adduser.php ${admin_user} ${admin_pass} 10 ${admin_email} && touch ${basedir}/.adduser.php-ran",
       path    => ['/usr/bin/'],
       creates => "${basedir}/.adduser.php-ran",
-      require => Class['librenms::install'],
+      require => [ Class['librenms::install'], Exec['set_default_php_require'] ],
     }
  
     file { '/etc/cron.d/librenms':
