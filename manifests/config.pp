@@ -41,14 +41,6 @@ class librenms::config
       require => Class['librenms::install'],
     }
 
-    file { 'librenms-config.php':
-      path    => "${basedir}/config.php",
-      owner   => $system_user,
-      group   => $system_user,
-      content => template('librenms/config.php.erb'),
-      require => Class['librenms::install'],
-    }
-
     Exec {
       user => $::os::params::adminuser,
       path => [ '/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin' ],
